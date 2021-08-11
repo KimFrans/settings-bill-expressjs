@@ -33,11 +33,19 @@ module.exports = function SettingsBill() {
             cost = callCost;
         }
 
-        actionList.push({
-            type: action,
-            cost,
-            timestamp: new Date()
-        });
+        if(cost != 0){
+            actionList.push({
+                type: action,
+                cost,
+                timestamp: new Date()
+            });
+        }
+
+        // actionList.push({
+        //     type: action,
+        //     cost,
+        //     timestamp: new Date()
+        // });
     }
 
     function actions(){
@@ -88,12 +96,12 @@ module.exports = function SettingsBill() {
     }
 
     function totals() {
-        let smsTotal = getTotal('sms')
-        let callTotal = getTotal('call')
+        let smsTotal = getTotal('sms').toFixed(2)
+        let callTotal = getTotal('call').toFixed(2)
         return {
             smsTotal,
             callTotal,
-            grandTotal : grandTotal()
+            grandTotal : grandTotal().toFixed(2)
         }
     }
 
@@ -110,6 +118,16 @@ module.exports = function SettingsBill() {
         return total >= criticalLevel;
     }
 
+    function colorReturn(){
+        if(hasReachedCriticalLevel() && grandTotal() > 0){
+            return "danger"
+        } if (hasReachedWarningLevel()){
+            return "warning"
+        } else {
+            return
+        }
+    }
+
     return {
         setSettings,
         getSettings,
@@ -118,6 +136,7 @@ module.exports = function SettingsBill() {
         actionsFor,
         totals,
         hasReachedWarningLevel,
-        hasReachedCriticalLevel
+        hasReachedCriticalLevel,
+        colorReturn,
     }
 }
