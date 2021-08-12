@@ -6,7 +6,7 @@ const SettingsBill = require('./settings-bill');
 
 var moment = require('moment'); // require
 // moment().format();
-moment().fromNow("ss");
+// moment().fromNow();
 
 const app = express();
 const settingsBill = SettingsBill();
@@ -61,12 +61,31 @@ app.post('/action', function (req, res) {
 });
 
 app.get('/actions', function (req, res) {
-    res.render('actions', { actions: settingsBill.actions() });
+    var actions = settingsBill.actions()
+    actions.forEach(element => {
+        element.time = moment(element.timestamp).fromNow()
+    });
+    res.render('actions', { 
+        actions: actions
+        
+        // totals : settingsBill.totals()
+    });
 });
 
 app.get('/actions/:actionType', function (req, res) {
     const actionType = req.params.actionType;
-    res.render('actions', { actions: settingsBill.actionsFor(actionType) });
+    var actions = settingsBill.actionsFor(actionType)
+    actions.forEach(element => {
+        element.time = moment(element.timestamp).fromNow()
+    });
+    // res.render('actions', { 
+    //     actions: actions
+        
+    //     // totals : settingsBill.totals()
+    // });
+    res.render('actions', { actions: settingsBill.actionsFor(actionType),
+        timestamp : moment().fromNow()
+    });
 });
 
 const PORT = process.env.PORT || 3011

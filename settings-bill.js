@@ -3,11 +3,11 @@ module.exports = function SettingsBill() {
     let smsCost;
     let callCost;
     let warningLevel;
-    let criticalLevel; 
+    let criticalLevel;
 
     let actionList = [];
 
-    function setSettings (settings) {
+    function setSettings(settings) {
         smsCost = Number(settings.smsCost);
         callCost = Number(settings.callCost);
         warningLevel = settings.warningLevel;
@@ -25,21 +25,40 @@ module.exports = function SettingsBill() {
 
     function recordAction(action) {
 
-        let cost = 0;
-        if (action === 'sms'){
-            cost = smsCost;
-        }
-        else if (action === 'call'){
-            cost = callCost;
-        }
+        if (!(grandTotal() >= criticalLevel)) {
+            let cost = 0;
 
-        if(cost != 0){
-            actionList.push({
-                type: action,
-                cost,
-                timestamp: new Date()
-            });
+            if (action === 'sms') {
+                cost = smsCost;
+            }
+            else if (action === 'call') {
+                cost = callCost;
+            }
+
+            if (cost != 0) {
+                actionList.push({
+                    type: action,
+                    cost,
+                    timestamp: new Date()
+                });
+            }
         }
+        // let cost = 0;
+
+        // if (action === 'sms'){
+        //     cost = smsCost;
+        // }
+        // else if (action === 'call'){
+        //     cost = callCost;
+        // }
+
+        // if(cost != 0){
+        //     actionList.push({
+        //         type: action,
+        //         cost,
+        //         timestamp: new Date()
+        //     });
+        // }
 
         // actionList.push({
         //     type: action,
@@ -48,12 +67,13 @@ module.exports = function SettingsBill() {
         // });
     }
 
-    function actions(){
+    function actions() {
         return actionList;
     }
 
-    function actionsFor(type){
+    function actionsFor(type) {
         const filteredActions = [];
+
 
         // loop through all the entries in the action list 
         for (let index = 0; index < actionList.length; index++) {
@@ -72,12 +92,18 @@ module.exports = function SettingsBill() {
 
     function getTotal(type) {
         let total = 0;
+        // if(hasReachedCriticalLevel() && grandTotal() > 0){
+        //     console.log("It has reached");
+        // }
         // loop through all the entries in the action list 
         for (let index = 0; index < actionList.length; index++) {
             const action = actionList[index];
             // check this is the type we are doing the total for 
             if (action.type === type) {
-                // if it is add the total to the list
+                // if it is add the total to the list function timeFromNow(){
+                //     const date = new Date()
+                //     return moment(date).fromNow("ss");
+                // }
                 total += action.cost;
             }
         }
@@ -101,32 +127,37 @@ module.exports = function SettingsBill() {
         return {
             smsTotal,
             callTotal,
-            grandTotal : grandTotal().toFixed(2)
+            grandTotal: grandTotal().toFixed(2)
         }
     }
 
-    function hasReachedWarningLevel(){
+    function hasReachedWarningLevel() {
         const total = grandTotal();
-        const reachedWarningLevel = total >= warningLevel 
+        const reachedWarningLevel = total >= warningLevel
             && total < criticalLevel;
 
         return reachedWarningLevel;
     }
 
-    function hasReachedCriticalLevel(){
+    function hasReachedCriticalLevel() {
         const total = grandTotal();
         return total >= criticalLevel;
     }
 
-    function colorReturn(){
-        if(hasReachedCriticalLevel() && grandTotal() > 0){
+    function colorReturn() {
+        if (hasReachedCriticalLevel() && grandTotal() > 0) {
             return "danger"
-        } if (hasReachedWarningLevel()){
+        } if (hasReachedWarningLevel()) {
             return "warning"
         } else {
             return
         }
     }
+
+    // function timeFromNow(){
+    //     const date = new Date()
+    //     return moment(date).fromNow("ss");
+    // }
 
     return {
         setSettings,
@@ -138,5 +169,6 @@ module.exports = function SettingsBill() {
         hasReachedWarningLevel,
         hasReachedCriticalLevel,
         colorReturn,
+        // timeFromNow,
     }
 }
