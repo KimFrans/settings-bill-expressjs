@@ -43,28 +43,7 @@ module.exports = function SettingsBill() {
                 });
             }
         }
-        // let cost = 0;
 
-        // if (action === 'sms'){
-        //     cost = smsCost;
-        // }
-        // else if (action === 'call'){
-        //     cost = callCost;
-        // }
-
-        // if(cost != 0){
-        //     actionList.push({
-        //         type: action,
-        //         cost,
-        //         timestamp: new Date()
-        //     });
-        // }
-
-        // actionList.push({
-        //     type: action,
-        //     cost,
-        //     timestamp: new Date()
-        // });
     }
 
     function actions() {
@@ -87,34 +66,20 @@ module.exports = function SettingsBill() {
 
         return filteredActions;
 
-        // return actionList.filter((action) => action.type === type);
     }
 
     function getTotal(type) {
         let total = 0;
-        // if(hasReachedCriticalLevel() && grandTotal() > 0){
-        //     console.log("It has reached");
-        // }
+    
         // loop through all the entries in the action list 
         for (let index = 0; index < actionList.length; index++) {
             const action = actionList[index];
             // check this is the type we are doing the total for 
             if (action.type === type) {
-                // if it is add the total to the list function timeFromNow(){
-                //     const date = new Date()
-                //     return moment(date).fromNow("ss");
-                // }
                 total += action.cost;
             }
         }
         return total;
-
-        // the short way using reduce and arrow functions
-
-        // return actionList.reduce((total, action) => { 
-        //     let val = action.type === type ? action.cost : 0;
-        //     return total + val;
-        // }, 0);
     }
 
     function grandTotal() {
@@ -154,11 +119,6 @@ module.exports = function SettingsBill() {
         }
     }
 
-    // function timeFromNow(){
-    //     const date = new Date()
-    //     return moment(date).fromNow("ss");
-    // }
-
     return {
         setSettings,
         getSettings,
@@ -169,6 +129,5 @@ module.exports = function SettingsBill() {
         hasReachedWarningLevel,
         hasReachedCriticalLevel,
         colorReturn,
-        // timeFromNow,
     }
 }
